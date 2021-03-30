@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
-const Home = () => import('@/views/home/Home.vue')
+import pages from './importPages.js'
 
 Vue.use(VueRouter)
+
+
+const Home = () => import('@/views/home/Home.vue')
 
 const routes = [
   {
@@ -13,10 +15,21 @@ const routes = [
   },
 ]
 
+routes.push(...pages)
+
+
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (to.name === 'Home' && savedPosition) {
+      return savedPosition
+    }
+    else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
 
 export default router
